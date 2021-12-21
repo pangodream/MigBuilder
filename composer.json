@@ -1,0 +1,20 @@
+{
+    "name": "pangodream/migbuilder",
+    "description": "Laravel Model, Seeder, Factory & Migration MySQL reverse engineer tool",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "pangodream",
+            "email": "development@pangodream.es"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+             "MigBuilder": "src/"
+         }
+    },
+    "require": {
+        "php": ">=7.0.0"
+    }
+}
