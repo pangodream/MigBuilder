@@ -107,6 +107,14 @@ class Renderer
                 $default = "'".$default."'";
             }
         }
+        if($isReferred == true && $column->name == "id"){
+            $columnType = "id";
+        }
+        if(isset($column->fk)){
+            if($column->fk->ref_column == "id"){
+                $columnType = "unsignedBigInteger";
+            }
+        }
         $indexCode = "";
         $constraintsCode = "";
 
