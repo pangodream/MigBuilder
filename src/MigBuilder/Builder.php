@@ -52,7 +52,16 @@ class Builder
         $this->buildMigration($table, $index, $timestamps);
     }
     private function buildModel($table){
-        $code = Renderer::model($table);
+        $columns = $this->explorer->listColumns($table);
+        $constraints = $this->explorer->listConstraints($table);
+        $children = [];
+        $tables = $this->explorer->listTables();
+        foreach($tables as $t){
+            if(isset($t['dependencies'][$table])){
+                $children[] = $t['name'];
+            }
+        }
+        $code = Renderer::model($table, $columns, $constraints, $children);
         file_put_contents(app_path().'/Models/'.self::modelFileName($table), $code);
     }
     private function buildFactory($table){

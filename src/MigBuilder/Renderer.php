@@ -67,9 +67,35 @@ class Renderer
         return $code;
     }
 
-    public static function model($table){
+    public static function model($table, $columns, $constraints, $children){
         $code = "";
-        $code .= self::model_001($table);
+        $code .= self::model_001_class_start($table);
+        //Fillable
+        $code .= "    // Fillables (remove the columns you don't need)\r\n";
+        $code .= "    protected \$fillable = [";
+        $idx = 0;
+        foreach($columns as $column){
+            $idx++;
+            $code .= "'$column->name', ";
+            if($idx % 8 == 0 && $idx < sizeof($columns)){
+                $code .= "\r\n                           ";
+            }
+        }
+        $code .= "];\r\n";
+        $code .= "\r\n";
+        //Relationships
+        $code .= "    // Parent relationships (change belongsTo to belongsToMany or similar if needed\r\n";
+        foreach($columns as $column){
+            if(isset($constraints[$column->name])){
+                $code .= self::modelRelationship(Util::firstUpper($constraints[$column->name]->ref_table), "belongsTo");
+            }
+        }
+        $code .= "    // Child relationships (change hasMany to hasOne or similar if needed\r\n";
+        foreach($children as $child){
+            $code .= self::modelRelationship(Util::firstUpper($child), "hasMany");
+        }
+
+        $code .= self::model_002_class_end();
         return $code;
     }
     public static function factory($table){
@@ -208,7 +234,7 @@ class Create".Util::firstUpper($table)."Table extends Migration
     /******************************************************************
      * MODEL
      */
-    private static function model_001($table){
+    private static function model_001_class_start($table){
         return "<?php
 /* Generated automatically using MigBuilder by Pangodream */
 
@@ -220,6 +246,12 @@ use Illuminate\Database\Eloquent\Model;
 class ".Util::firstUpper($table)." extends Model
 {
     use HasFactory;
+    protected \$table = '$table';
+
+";
+    }
+    private static function model_002_class_end(){
+        return "
 }
 ";
     }
@@ -234,9 +266,11 @@ class ".Util::firstUpper($table)." extends Model
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\\".Util::firstUpper($table).";
 
 class ".Util::firstUpper($table)."Factory extends Factory
 {
+    protected \$model = ".Util::firstUpper($table)."::class;
     /**
      * Define the model's default state.
      *
@@ -261,6 +295,7 @@ class ".Util::firstUpper($table)."Factory extends Factory
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\\".Util::firstUpper($table).";
 
 class ".Util::firstUpper($table)."Seeder extends Seeder
 {
@@ -276,6 +311,14 @@ class ".Util::firstUpper($table)."Seeder extends Seeder
 }";
     }
 
-
+    /*********************************************************************
+     * MODEL Relationship
+     */
+    private static function modelRelationship($modelName, $relationship){
+        return "    public function $modelName(){
+        return \$this->$relationship($modelName::class);
+    }
+";
+    }
 
 }
