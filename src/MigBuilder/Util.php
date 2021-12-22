@@ -9,9 +9,9 @@ namespace MigBuilder;
 
 class Util
 {
-    public static function firstUpper($name){
+    public static function firstUpper($name, $evenFirstOne = true){
         $resName = "";
-        $ucase = true;
+        $ucase = $evenFirstOne;
         $skip = false;
         for($i=0;$i<strlen($name);$i++){
             $l= strtolower(substr($name, $i, 1));

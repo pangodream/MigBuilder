@@ -106,11 +106,10 @@ class Renderer
     public static function seeder($table, $columns){
         $code = "";
         $code .= self::seeder_001_start($table);
-        $code .= "    // Column values asignment\r\n";
-        $code .= "/*\r\n";
-        $code .= "    \$".Util::firstUpper($table)." = [";
+        $code .= "    // Record sample structure\r\n";
+        $code .= "    \$".Util::firstUpper($table, false)." = [\r\n";
         foreach($columns as $column){
-            $code .= "        '$column->name' => ";
+            $code .= "        //'$column->name' => ";
             if(in_array($column->data_type, ['varchar','char', 'text', 'date', 'time', 'datetime', 'timestamp'])){
                 $code .= "'',\r\n";
             }else{
@@ -118,7 +117,6 @@ class Renderer
             }
         }
         $code .= "    ];\r\n";
-        $code .= "*/\r\n";
         $code .= self::seeder_002_end();
         return $code;
     }
