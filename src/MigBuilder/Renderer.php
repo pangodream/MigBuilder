@@ -84,13 +84,13 @@ class Renderer
         $code .= "];\r\n";
         $code .= "\r\n";
         //Relationships
-        $code .= "    // Parent relationships (change belongsTo to belongsToMany or similar if needed\r\n";
+        $code .= "    // Parent relationships (change belongsTo to belongsToMany or similar if needed)\r\n";
         foreach($columns as $column){
             if(isset($constraints[$column->name])){
                 $code .= self::modelRelationship(Util::firstUpper($constraints[$column->name]->ref_table), "belongsTo");
             }
         }
-        $code .= "    // Child relationships (change hasMany to hasOne or similar if needed\r\n";
+        $code .= "    // Child relationships (change hasMany to hasOne or similar if needed)\r\n";
         foreach($children as $child){
             $code .= self::modelRelationship(Util::firstUpper($child), "hasMany");
         }
@@ -103,9 +103,23 @@ class Renderer
         $code .= self::factory_001($table);
         return $code;
     }
-    public static function seeder($table){
+    public static function seeder($table, $columns){
         $code = "";
-        $code .= self::seeder_001($table);
+        $code .= self::seeder_001_start($table);
+        $code .= "    // Column values asignment\r\n";
+        $code .= "/*\r\n";
+        $code .= "    \$".Util::firstUpper($table)." = [";
+        foreach($columns as $column){
+            $code .= "        '$column->name' => ";
+            if(in_array($column->data_type, ['varchar','char', 'text', 'date', 'time', 'datetime', 'timestamp'])){
+                $code .= "'',\r\n";
+            }else{
+                $code .= " ,\r\n";
+            }
+        }
+        $code .= "    ];\r\n";
+        $code .= "*/\r\n";
+        $code .= self::seeder_002_end();
         return $code;
     }
 
@@ -288,7 +302,7 @@ class ".Util::firstUpper($table)."Factory extends Factory
     /******************************************************************
      * SEEDER
      */
-    private static function seeder_001($table){
+    private static function seeder_001_start($table){
         return "<?php
 /* Generated automatically using MigBuilder by Pangodream */
 
@@ -306,7 +320,11 @@ class ".Util::firstUpper($table)."Seeder extends Seeder
      */
     public function run()
     {
-        //
+";
+    }
+
+    private static function seeder_002_end(){
+        return "
     }
 }";
     }

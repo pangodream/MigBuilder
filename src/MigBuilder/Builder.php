@@ -69,7 +69,8 @@ class Builder
         file_put_contents(database_path().'/factories/'.self::factoryFileName($table), $code);
     }
     private function buildSeeder($table){
-        $code = Renderer::seeder($table);
+        $columns = $this->explorer->listColumns($table);
+        $code = Renderer::seeder($table, $columns);
         file_put_contents(database_path().'/seeders/'.self::seederFileName($table), $code);
     }
     private function buildMigration($table, $index, $timestamps = true){
