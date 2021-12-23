@@ -34,6 +34,7 @@ class RunCommand extends Command
     {
 
         $b = new Builder($this->argument('connection'));
+        echo "Migbuilder starting...\r\n";
         $b->buildDatabase($this->option('timestamps'), $this->option('overwrite'));
 
         return true;
