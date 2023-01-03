@@ -18,7 +18,7 @@ class Renderer
         'bit'=>'boolean',
         'char'=>'char',
         'date'=>'date',
-        'dateTime'=>'dateTime',
+        'datetime'=>'datetime',
         'decimal'=>'decimal',
         'double'=>'double',
         'float'=>'float',
