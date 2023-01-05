@@ -87,7 +87,7 @@ class Renderer
         $code .= "    // Parent relationships (change belongsTo to belongsToMany or similar if needed)\r\n";
         foreach($columns as $column){
             if(isset($constraints[$column->name])){
-                $code .= self::modelRelationship(Util::firstUpper($constraints[$column->name]->ref_table), "belongsTo");
+                $code .= self::modelRelationship(Util::firstUpper($constraints[$column->name]->ref_table), "belongsTo", $constraints[$column->name]->column_name);
             }
         }
         $code .= "    // Child relationships (change hasMany to hasOne or similar if needed)\r\n";
@@ -334,7 +334,13 @@ class ".Util::firstUpper($table)."Seeder extends Seeder
     /*********************************************************************
      * MODEL Relationship
      */
-    private static function modelRelationship($modelName, $relationship){
+    private static function modelRelationship($modelName, $relationship), $foreignKey = ''){
+        if ($foreignKey !== '') {
+            return "    public function $modelName(){
+        return \$this->$relationship($modelName::class, '$foreignKey');
+    }
+";
+        }
         return "    public function $modelName(){
         return \$this->$relationship($modelName::class);
     }
