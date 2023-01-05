@@ -33,7 +33,7 @@ class Renderer
         'tinytext'=>'string',
         'text'=>'string',
         'mediumtext'=>'string',
-        'longtext'=>'string',
+        'longtext'=>'longText',
     ];
 
     public static function migration($table, $columns, $constraints, $timestamps = true){
