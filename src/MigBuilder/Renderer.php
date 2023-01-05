@@ -171,7 +171,11 @@ class Renderer
         }
 
         if($default !== null){
-            $code .= "->default($default)";
+            if ($default === 'CURRENT_TIMESTAMP') {
+                $code .= "->useCurrent()";
+            } else {
+                $code .= "->default($default)";
+            }
         }
         $code .= ";\r\n";
         if($isReferred == true){
