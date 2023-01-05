@@ -10,13 +10,17 @@ The 'perfect' tables definition is as follows:
 
 * Tables should contain a **single column primary key**, better if its name is 'id'
 * Relationships have to be declared and always be composed of one single column
-* Not frequent datatypes (binary, longtext, ...) have not been tested yet
+* Not frequent datatypes (binary, ~longtext~, ...) have not been tested yet
 
 ##### INSTALLATION
-``composer require pangodream/migbuilder``
+```
+composer require pangodream/migbuilder
+```
 
 ##### USAGE
-``php artisan migbuilder originschema``
+```
+php artisan migbuilder:build originschema
+```
 
 Migbuilder will read originschema database (originschema is the connection name in Laravel config/app.php file) and will generate the migration, model, seeder and factory files for eaxh of the tables
 A good practice is two have two different connections declared in Laravel config/database.php file:
