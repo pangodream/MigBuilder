@@ -46,12 +46,12 @@ class Builder
             @unlink($migrationFile);
         }
 
-        $this->buildModel($table);
+        $this->buildModel($table, $timestamps);
         $this->buildFactory($table);
         $this->buildSeeder($table);
         $this->buildMigration($table, $index, $timestamps);
     }
-    private function buildModel($table){
+    private function buildModel($table, $timestamps){
         $columns = $this->explorer->listColumns($table);
         $constraints = $this->explorer->listConstraints($table);
         $children = [];
@@ -61,7 +61,7 @@ class Builder
                 $children[] = $t['name'];
             }
         }
-        $code = Renderer::model($table, $columns, $constraints, $children);
+        $code = Renderer::model($table, $columns, $constraints, $children, $timestamps);
         file_put_contents(app_path().'/Models/'.self::modelFileName($table), $code);
     }
     private function buildFactory($table){

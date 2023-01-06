@@ -67,9 +67,15 @@ class Renderer
         return $code;
     }
 
-    public static function model($table, $columns, $constraints, $children){
+    public static function model($table, $columns, $constraints, $children, $timestamps){
         $code = "";
         $code .= self::model_001_class_start($table);
+
+        // Timestamps
+        if ($timestamps === false) {
+            $code .= "    public \$timestamps = false;\r\n";
+        }
+
         //Fillable
         $code .= "    // Fillables (remove the columns you don't need)\r\n";
         $code .= "    protected \$fillable = [";
