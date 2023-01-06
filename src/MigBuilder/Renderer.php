@@ -70,6 +70,15 @@ class Renderer
     public static function model($table, $columns, $constraints, $children){
         $code = "";
         $code .= self::model_001_class_start($table);
+
+        // UUID
+        foreach($columns as $column){
+            if ($column->column_key === 'PRI' && $column->data_type === 'char' && $column->max_length === 32) {
+                $code .= "    protected \$keyType = 'string';\r\n";
+                $code .= "    public \$incrementing = false;\r\n\r\n";
+            }
+        }
+
         //Fillable
         $code .= "    // Fillables (remove the columns you don't need)\r\n";
         $code .= "    protected \$fillable = [";
@@ -152,6 +161,10 @@ class Renderer
             if($column->fk->ref_column == "id"){
                 $columnType = "unsignedBigInteger";
             }
+        }
+        if ($length === 32 && $column->data_type === 'char') {
+            $length = null;
+            $columnType = 'uuid';
         }
         $indexCode = "";
         $constraintsCode = "";
