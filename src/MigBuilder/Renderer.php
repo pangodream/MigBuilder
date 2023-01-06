@@ -153,6 +153,10 @@ class Renderer
                 $columnType = "unsignedBigInteger";
             }
         }
+        if ($length === 32 && $column->data_type === 'char') {
+            $length = null;
+            $columnType = 'uuid';
+        }
         $indexCode = "";
         $constraintsCode = "";
 
