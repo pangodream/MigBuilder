@@ -145,12 +145,16 @@ class Renderer
                 $default = "'".$default."'";
             }
         }
-        if($isReferred == true && $column->name == "id"){
-            $columnType = "id";
+        if($column->column_key == "PRI"){
+            if ($column->extra === 'auto_increment'){
+                $columnType = ($column->data_type === 'int') ? "increments" : "id";
+            } else {
+                $columnType = ($column->data_type === 'int') ? "unsignedInteger" : "unsignedBigInteger";
+            }
         }
         if(isset($column->fk)){
-            if($column->fk->ref_column == "id"){
-                $columnType = "unsignedBigInteger";
+            if($column->fk->ref_column === "id"){
+                $columnType = ($column->data_type === 'int') ? "unsignedInteger":"unsignedBigInteger";
             }
         }
         $indexCode = "";
